@@ -82,6 +82,7 @@ class Game
   end
 
   def straight?(cards)
+    sort(cards)
     counter=0
     res=[]
     cards.each do |i|
@@ -90,18 +91,30 @@ class Game
           counter += 1
           res.push(i)
           if cards.index(i) == cards.length - 2
-            puts "TRUE"
             res.push(cards[cards.index(i) + 1])
           end
         end
       end
     end
-    return [true, res] if counter >= 4
+    
+    if counter > 4
+      if res.length > 5
+        res.each do |j|
+          res.each do |i|
+            if res.index(i) < res.length - 5
+              res.delete(i) 
+            end
+          end
+        end
+      end
+      return [true, res] 
+    end
 
     [false, 0]
   end
 
   def pair?(cards)
+    sort(cards)
     result = []
     cards.each do |i|
       if cards.index(i) < cards.length-1
@@ -114,6 +127,7 @@ class Game
   end
 
   def triple?(cards)
+    sort(cards)
     result = []
     cards.each do |i|
       if cards.index(i) < cards.length - 2
@@ -151,6 +165,7 @@ class Game
       false
     end
   end
+
 
   def flush?(cards)
     result = []
@@ -225,7 +240,22 @@ class Game
       return [false,0]
     end
   end
+
+  def royale_flush?(cards)
+    str8_fl = straight_flush?(cards)
+    if str8_fl[0] == true
+      puts "\n RF GOT REQUEST: " + str8_fl[1][0].rank.to_s
+      if (str8_fl[1][0].rank == 10) && (str8_fl[1][4].rank == 14)
+        return str8_fl
+      else
+        return [false, ['ERR1']]
+      end
+    else
+      return [false, ['ERR']]
+    end
+  end
 end
+
 
 g = Game.new
 g.pass_hand
