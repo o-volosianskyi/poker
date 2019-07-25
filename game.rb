@@ -9,45 +9,45 @@ class Game
   end
 
   def pass_hand
-    fc = Card.new(@ranks, @suits)
-    @usercards.push(fc)
+    fc = Card.new(@ranks, @suits) #create random card
+    @usercards.push(fc) #push it to user's cards array
     sc = fc
-    sc = Card.new(@ranks, @suits) while sc == fc
-    @usercards.push(sc)
+    sc = Card.new(@ranks, @suits) while sc == fc #check if the 2nd card is the same as 1st
+    @usercards.push(sc) #if it's not the same, push it into user's array
   end
 
   def pass_table
     for i in 1..5 do
       card = Card.new(@ranks, @suits)
-      @tablecards.push(card) unless exists(card)
+      @tablecards.push(card) unless exists(card) #to be shure that all cards are different
     end
   end
 
   def exists(card)
     @tablecards.each do |i|
-      return true if card.rank == i.rank && card.suit == i.suit
+      return true if card.rank == i.rank && card.suit == i.suit #check the card in user's cards
     end
     @usercards.each do |i|
-      return true if card.rank == i.rank && card.suit == i.suit
+      return true if card.rank == i.rank && card.suit == i.suit #check the card among cards on table
     end
     false
   end
 
-  def int_char(suit)
-    return 'A' if suit == 14
-    return 'K' if suit == 13
-    return 'Q' if suit == 12
-    return 'J' if suit == 11
-    return suit if suit < 11
+  def int_char(rank)
+    return 'A' if rank == 14
+    return 'K' if rank == 13
+    return 'Q' if rank == 12
+    return 'J' if rank == 11
+    return rank if rank < 11
   end
 
   def print1
     @usercards.each do |i|
-      print '|' + i.rank.to_s + i.suit + '|'
+      print '|' + int_char(i.rank).to_s + i.suit + '|'
     end
     print "\n"
     @tablecards.each do |i|
-      print '|' + i.rank.to_s + i.suit + '|'
+      print '|' + int_char(i.rank).to_s + i.suit + '|'
     end
   end
 
@@ -75,19 +75,30 @@ class Game
     puts 'Triple? ' + triple?(summary)[0].to_s + "\n"
     puts 'Four of a kind? ' + four_of_a_kind?(summary)[0].to_s + "\n"
     puts 'Fullhouse? ' + fullhouse?(summary).to_s + "\n"
+    puts 'Str8? ' + straight?(summary).to_s + "\n"
     puts 'Flush? ' + flush?(summary)[0].to_s + "\n"
+    puts 'Str8 Flush? ' + straight_flush?(summary)[0].to_s + "\n"
+
   end
 
   def straight?(cards)
     counter=0
+    res=[]
     cards.each do |i|
-      if cards.index(i) < cards.length
+      if cards.index(i) < cards.length - 1
         if i.rank - cards[cards.index(i) + 1].rank == -1
           counter += 1
+          res.push(i)
+          if cards.index(i) == cards.length - 2
+            puts "TRUE"
+            res.push(cards[cards.index(i) + 1])
+          end
         end
       end
     end
-    return true if counter == 5
+    return [true, res] if counter >= 4
+
+    [false, 0]
   end
 
   def pair?(cards)
@@ -143,6 +154,7 @@ class Game
 
   def flush?(cards)
     result = []
+    flag=false
     s=0
     c=0
     h=0
@@ -159,11 +171,23 @@ class Game
         h += 1
       end  
     end
-    result = find_suit(cards, '♠') if s >= 5
-    result = find_suit(cards, '♣') if c >= 5
-    result = find_suit(cards, '♦') if d >= 5
-    result = find_suit(cards, '♥') if h >= 5
-    if result.length > 5
+    if s >= 5
+      result = find_suit(cards, '♠') 
+      flag=true
+    end
+    if c >= 5
+      result = find_suit(cards, '♣') -
+      flag=true
+    end
+    if d >= 5
+      result = find_suit(cards, '♦') 
+      flag=true
+    end
+    if h >= 5
+      result = find_suit(cards, '♥') 
+      flag=true
+    end
+=begin if result.length > 5
       result.each do |j|
         result.each do |i|
           if result.index(i) < result.length - 5
@@ -172,7 +196,13 @@ class Game
         end
       end
     end
-    result
+=end 
+    if flag == true
+      final = [true, result]
+    else
+      final=[false,0]
+    end
+    final
   end
 
   def find_suit(cards, suit1)
@@ -182,6 +212,18 @@ class Game
     end
     sort(result)
     result
+  end
+
+  def straight_flush?(cards)
+    is_flush = flush?(cards)
+    if is_flush[0] == true
+      str8 = straight?(is_flush[1])
+      if str8[0] == true
+        return str8
+      end
+    else
+      return [false,0]
+    end
   end
 end
 
