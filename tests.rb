@@ -1,5 +1,5 @@
 require_relative 'card'
-require_relative 'game'
+require_relative 'calc'
 
 class Tests
 
@@ -26,8 +26,8 @@ class Tests
     c7.suit = '♦'
     c7.rank = 7
     cards = [c1, c2, c3, c4, c5, c6, c7]
-    g = Game.new
-    puts "_________________\n\nTwo pairs test: " + g.two_pairs?(cards).to_s + "\n_________________\n\n"
+    g = Calc.new
+    puts "_________________\n\nFullhouse test: " + g.fullhouse?(cards).to_s + "\n_________________\n\n"
   end
 
   def test_two_pairs
@@ -53,7 +53,7 @@ class Tests
     c7.suit = '♦'
     c7.rank = 7
     cards = [c1, c2, c3, c4, c5, c6, c7]
-    g = Game.new
+    g = Calc.new
     print "_________________\n\nTwo pairs test: " 
     g.two_pairs?(cards)[1].each do |i|
       print '|' + g.int_char(i.rank).to_s + i.suit + '|'
@@ -70,21 +70,21 @@ class Tests
     c6= Card.new([2], ['♠'])
     c7= Card.new([2], ['♠'])
     c1.suit = '♠'
-    c1.rank = 7
+    c1.rank = 5
     c2.suit = '♣'
-    c2.rank = 8
+    c2.rank = 14
     c3.suit = '♦'
-    c3.rank = 9
+    c3.rank = 4
     c4.suit = '♠'
-    c4.rank = 10
+    c4.rank = 7
     c5.suit = '♦'
-    c5.rank = 11
+    c5.rank = 8
     c6.suit = '♥'
-    c6.rank = 2
+    c6.rank = 9
     c7.suit = '♦'
-    c7.rank = 3
+    c7.rank = 6
     cards = [c1, c2, c3, c4, c5, c6, c7]
-    g = Game.new
+    g = Calc.new
     print "_________________\n\nStraight test: " 
     g.straight?(cards)[1].each do |i|
       print '|' + g.int_char(i.rank).to_s + i.suit + '|'
@@ -115,7 +115,7 @@ class Tests
     c7.suit = '♠'
     c7.rank = 7
     cards = [c1, c2, c3, c4, c5, c6, c7]
-    g = Game.new
+    g = Calc.new
     print "_________________\n\nFlush test: " 
     g.flush?(cards)[1].each do |i|
       print '|' + g.int_char(i.rank).to_s + i.suit + '|'
@@ -146,7 +146,7 @@ class Tests
     c7.suit = '♦'
     c7.rank = 7
     cards = [c1, c2, c3, c4, c5, c6, c7]
-    g = Game.new
+    g = Calc.new
     print "_________________\n\nStraight Flush test: " 
     g.straight_flush?(cards)[1].each do |i|
       print '|' + g.int_char(i.rank).to_s + i.suit + '|'
@@ -177,7 +177,7 @@ class Tests
     c7.suit = '♦'
     c7.rank = 7
     cards = [c1, c2, c3, c4, c5, c6, c7]
-    g = Game.new
+    g = Calc.new
     print "_________________\n\nRoyale Flush test: " 
     g.straight_flush?(cards)[1].each do |i|
       print '|' + g.int_char(i.rank).to_s + i.suit + '|'

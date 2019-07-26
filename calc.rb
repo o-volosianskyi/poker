@@ -65,13 +65,15 @@ class Calc
         if i.rank - cards[cards.index(i) + 1].rank == -1 # check difference between this and next card
           counter += 1 # if difference in ranks = -1
           res.push(i) # add this card into array
-          if cards.index(i) == cards.length - 2 # if the card's penultimate 
-            res.push(cards[cards.index(i) + 1]) # then add the last card as well
+          if cards.index(i) < cards.length - 2 # if the card index is fewer then penultimate
+            if cards[cards.index(i) + 1].rank - cards[cards.index(i) + 2].rank != -1 #check the next two cards, if there's not -1
+              res.push(cards[cards.index(i) + 1]) # then add the penultimate card as well
+              break
+            end
           end
         end
       end
     end
-
     if counter > 4 # if we have streak of cards >4
       if res.length > 5 # if the streak is greater then 5
         res.each do |j|
